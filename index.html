@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seven Habits Teacher Resource</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=Public+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Layout idea: one narrow column app. Tabs on top (Find / This Term / Glossary), a three-tap form, then cards. */
+:root{
+  --ink:#16243a;
+  --paper:#f3f5f7;
+  --card:#ffffff;
+  --line:#d5dbe3;
+  --muted:#5a6778;
+  --accent:#0e6f6a;
+  --accent-soft:#dcefed;
+  --mark:#f0b43c;
+  --mark-soft:#fbefd2;
+  --font-display:"Bricolage Grotesque","Trebuchet MS",sans-serif;
+  --font-body:"Public Sans","Segoe UI",system-ui,sans-serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;overflow-y:auto}
+.wrap{max-width:760px;margin:0 auto;padding:20px 16px 56px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:1.6rem}
+h2{font-size:1.2rem}
+h3{font-size:1rem}
+p{margin:0}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--mark);outline-offset:2px}
+header.top{display:flex;flex-direction:column;gap:4px;margin-bottom:16px}
+.sub{color:var(--muted);font-size:.9rem}
+.proto{display:inline-block;background:var(--mark-soft);border:1px solid var(--mark);border-radius:6px;padding:2px 8px;font-size:.78rem;font-weight:600;width:fit-content}
+nav.tabs{display:flex;gap:4px;border-bottom:2px solid var(--line);margin-bottom:20px}
+nav.tabs a{padding:10px 14px;text-decoration:none;color:var(--muted);font-weight:600;border-bottom:3px solid transparent;margin-bottom:-2px}
+nav.tabs a[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+.panel{display:none}
+.panel.on{display:block}
+.step{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px}
+.step>h2{margin-bottom:2px}
+.step .hint{color:var(--muted);font-size:.88rem;margin-bottom:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:9px 14px;font-weight:600;min-height:44px;text-align:left}
+.chip[aria-pressed="true"],.chip[aria-checked="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.chip small{display:block;font-weight:500;font-size:.72rem;opacity:.85}
+.chip.hab{min-width:140px}
+.chip.hab.na[aria-pressed="false"]{border-style:dashed;color:var(--muted)}
+.ldo{margin-top:12px;background:var(--accent-soft);border-radius:8px;padding:10px 12px;font-size:.92rem}
+.ldo b{font-family:var(--font-display)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px;font-size:.8rem;color:var(--muted)}
+details.more{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-bottom:16px}
+details.more summary{cursor:pointer;font-weight:600}
+details.more .chips{margin-top:12px}
+.go{width:100%;background:var(--ink);color:#fff;border:0;border-radius:12px;padding:14px;font-weight:600;font-size:1.05rem;min-height:52px}
+.go:hover{background:#0b1626}
+.link{background:none;border:0;color:var(--accent);font-weight:600;padding:6px 0;text-decoration:underline}
+.sumbar{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 16px}
+.tag{display:inline-block;border-radius:999px;padding:2px 10px;font-size:.76rem;font-weight:600;background:#e8ecf1;color:var(--ink)}
+.tag.habit{background:var(--accent-soft);color:#0a4b47}
+.tag.tier-key{background:var(--mark);color:#3a2a00}
+.tag.tier-imp{background:var(--mark-soft);color:#3a2a00;border:1px solid var(--mark)}
+.tag.tier-gth{background:#e8ecf1}
+.tag.ph{border:1px dashed var(--muted);background:transparent;color:var(--muted)}
+.cards{display:flex;flex-direction:column;gap:10px}
+.rc{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;text-align:left;width:100%}
+.rc:hover{border-color:var(--accent)}
+.rc h3{margin-bottom:6px}
+.rc .tags{display:flex;flex-wrap:wrap;gap:6px}
+.cardpage{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.cardpage h2{margin:6px 0 8px}
+.cardpage .tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.stage{border-left:4px solid var(--accent);padding:4px 0 4px 12px;margin:14px 0}
+.stage h3{color:var(--accent)}
+.stage .def{font-size:.85rem;color:var(--muted);margin-bottom:6px}
+.stage .sh{font-weight:600;font-size:.85rem;margin-top:8px}
+ul.q{margin:4px 0 0;padding-left:20px}
+ul.q li{margin:3px 0}
+.step.off{opacity:.55;background:#e9ecf0}
+.chip[disabled]{cursor:not-allowed;background:#dfe3e8;color:#7a8594;border-style:dashed}
+.lvh{font-family:var(--font-display);margin:16px 0 2px;font-size:1rem}
+ol.eq{margin:8px 0 0;padding-left:22px}
+ol.eq li{margin:10px 0}
+.st{display:inline-block;border-radius:6px;padding:1px 8px;font-size:.74rem;font-weight:700;color:#fff;margin-right:6px}
+.st.w1{background:#0b5d3b}
+.st.w2{background:#1f9d5b}
+.st.w3{background:#2f8f64}
+.cycle{display:flex;flex-wrap:wrap;gap:18px;align-items:center;margin:4px 0 12px}
+.cyc{width:210px;max-width:100%;height:auto;flex:0 0 auto}
+.cyc-list{flex:1 1 220px;display:flex;flex-direction:column;gap:10px}
+.cs{border-left:6px solid;padding:2px 0 2px 12px}
+.cs h3{color:var(--ink)}
+.note{background:var(--mark-soft);border-radius:8px;padding:10px 12px;font-size:.88rem;margin:12px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:14px}
+.btn2{border:1.5px solid var(--ink);background:transparent;border-radius:10px;padding:8px 14px;font-weight:600;min-height:44px}
+/* This Term */
+.months{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:6px}
+.months button{flex:0 0 auto;border:1.5px solid var(--line);background:var(--card);border-radius:10px;padding:8px 12px;font-weight:600;min-height:44px}
+.months button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff}
+.months button.cur{border-color:var(--mark);border-width:2px}
+.sde{display:flex;gap:10px;align-items:center;justify-content:space-between;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;width:100%;text-align:left;margin-bottom:8px}
+.sde:hover:not([disabled]){border-color:var(--accent)}
+.sde[disabled]{opacity:.5;background:#e6e9ed;cursor:not-allowed}
+.sde .t{font-weight:600}
+.sde .m{font-size:.82rem;color:var(--muted)}
+.sde .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:4px}
+.sec-h{margin:18px 0 8px;font-size:.85rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+.empty{color:var(--muted);padding:10px 0}
+/* Glossary */
+.gl{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px}
+.gl h3{margin-bottom:4px}
+.gl p+p{margin-top:8px}
+dl.terms{margin:0;display:grid;grid-template-columns:max-content 1fr;gap:6px 16px}
+dl.terms dt{font-weight:600}
+dl.terms dd{margin:0}
+@media (max-width:480px){dl.terms{grid-template-columns:1fr}.chip.hab{min-width:0;flex:1 1 140px}}
+@media (prefers-reduced-motion:no-preference){.rc,.sde,.chip{transition:border-color .15s,background .15s}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <span class="proto">Form prototype. Sample content only.</span>
+  <h1>Seven Habits Teacher Resource</h1>
+  <p class="sub">Chung Cheng High (Main). Pick the event, get its reflection questions.</p>
+</header>
+
+<nav class="tabs" aria-label="Sections">
+  <a href="#home" data-tab="home">Events</a>
+  <a href="#glossary" data-tab="glossary">Glossary</a>
+</nav>
+
+<section id="p-home" class="panel"></section>
+<section id="p-glossary" class="panel"></section>
+</div>
+
+<script>
+/* ---------- DATA ---------- */
+var HABITS=[
+ {n:1,name:"Be Proactive",bank:"Personal Bank Account"},
+ {n:2,name:"End in Mind",bank:"Personal Bank Account"},
+ {n:3,name:"First Things First",bank:"Personal Bank Account"},
+ {n:4,name:"Think Win-Win",bank:"Relationship Bank Account"},
+ {n:5,name:"FUBU",bank:"Relationship Bank Account"},
+ {n:6,name:"Synergise",bank:"Relationship Bank Account"},
+ {n:7,name:"Sharpen the Saw",bank:"Relationship Bank Account"}
+];
+/* Matrix per habit: [Sec1, Sec2, Sec3, Sec4]. E=Emphasis, S=Supporting, R=Re-emphasise, -=none */
+var MATRIX={1:["E","S","S","R"],2:["E","S","S","S"],3:["-","E","S","S"],4:["-","E","S","S"],5:["-","-","E","S"],6:["-","-","E","S"],7:["-","-","-","E"]};
+var LDO={1:"I am proud to be a Chung Cheng student.",2:"I can carry out my duties with integrity and responsibility.",3:"I can make a difference to my community.",4:"I am a role model for myself and others."};
+var LABEL={E:"Emphasis",S:"Supporting",R:"Re-emphasise","-":"Not emphasised"};
+var SCOPES=["Individual","Class"];
+var DOMAINS=[{k:"sd",n:"Student development"},{k:"ac",n:"Academic"}];
+var MONTHS=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+
+/* SDEs. m = month index (0-11) or null; lv = restrict to level (number) ; all = throughout the year; h = habits */
+var SDES=[
+ {id:1,t:"START Right / Orientation",m:0,own:"YH",tier:"key",h:[1,2]},
+ {id:2,t:"Total Defence",m:1,own:"CCE",tier:"key",h:[3]},
+ {id:3,t:"Cross Country",m:2,own:"PE",tier:"key",h:[],unassigned:true},
+ {id:4,t:"Heritage Week & Speech Day",m:3,own:"SLead/AlumniConnect",tier:"key",h:[4,5]},
+ {id:5,t:"STRETCH / CCHM Goes Out",m:4,own:"YH",tier:"key",h:[7,6]},
+ {id:6,t:"Student-led PTM",m:4,own:"YH",tier:"key",h:[7]},
+ {id:7,t:"Racial / Religious Harmony",m:6,own:"CCE",tier:"key",h:[4,5]},
+ {id:8,t:"National Day",m:7,own:"CCE",tier:"key",h:[1]},
+ {id:9,t:"END Right",m:9,own:"YH",tier:"key",h:[7,2]},
+ {id:10,t:"VIA",vm:{1:4,2:4,3:7,4:2},own:"CCE",tier:"key",h:[4]},
+ {id:11,t:"All WAs + EYE",all:true,own:"IPSC",tier:"key",h:[2,3,6]}
+];
+
+/* Event-specific questions as templates: EVQ[sdeId][level] = list of [stage, template].
+   Tokens are filled by the scope voice (VOICE) so the wording fits who is asking and who is answering. */
+var VOICE={
+ Individual:{I:"you",me:"you",my:"your",Am:"Are",myself:"yourself",grp:"your class",newclass:"your new class",CCS:"a Chung Cheng student",oneanother:"your classmates"},
+ Class:{I:"we",me:"us",my:"our",Am:"Are",myself:"ourselves",grp:"our class",newclass:"our new class",CCS:"Chung Cheng students",oneanother:"one another"}
+};
+/* How the session runs for each scope (draft wording, to be confirmed) */
+var RUN={
+ Individual:["One-to-one conversation","Ask one question at a time and wait for the answer. Follow up on what the student says. You do not need all five."],
+ Class:["Class discussion","Students think alone, share with a partner, then a few share with the class. Close on the Now What? questions."]
+};
+function voice(t){var v=VOICE[S.scope];return t.replace(/\{(\w+)\}/g,function(m,k){return v[k]!==undefined?v[k]:m})}
+var EVQ={1:{
+ 1:[["What?","What did {I} see and hear in {my} first days at Chung Cheng that was new to {me}?"],
+    ["What?","What surprised {me} about the school, its routines or its rules?"],
+    ["So What?","Which habit did {I} practice in {my} first days: Be Proactive or End in Mind?"],
+    ["Now What?","{Am} {I} one step closer to being proud to be {CCS}?"],
+    ["Now What?","What is one routine or rule {I} will follow every day this term? When will {I} start?"]],
+ 2:[["What?","What assumptions did {I} have about classmates {I} did not know well?"],
+    ["What?","Who else was affected by how {I} included, or left out, others in these few days?"],
+    ["So What?","Which habit would have helped {me} include someone more: Be Proactive or End in Mind?"],
+    ["Now What?","If {I} face this situation again, what will {I} do differently to include others?"],
+    ["Now What?","{Am} {I} one step closer to carrying out {my} duties with integrity and responsibility?"]],
+ 3:[["What?","What problem did {I} identify as {newclass} came together?"],
+    ["What?","What did {I} feel during the interclass games with {newclass}?"],
+    ["So What?","Which habit would have been helpful when {I} were still getting to know {oneanother}: Be Proactive or End in Mind?"],
+    ["Now What?","Using what {I} learned from design thinking, what is one specific action {I} can take to help {grp} work well together? When will {I} do so?"],
+    ["Now What?","{Am} {I} one step closer to making a difference to {my} community, starting with {grp}?"]],
+ 4:[["What?","What did {I} see and hear on {my} visits to the polytechnics and JCs?"],
+    ["What?","What assumptions did {I} have about {my} next step after Sec 4?"],
+    ["So What?","Which habit did {I} practice when {I} thought about where {I} want to go after Sec 4: Be Proactive or End in Mind?"],
+    ["Now What?","What is one specific action {I} can take this term towards the goal {I} have in mind? When will {I} do so?"],
+    ["Now What?","{Am} {I} one step closer to being a role model for {myself} and others?"]]
+}};
+/* ---------- STATE ---------- */
+var S={level:1,scope:"Class",domain:"sd",view:"form",card:null,month:(new Date()).getMonth()};
+function emphasisFor(level){var o={};HABITS.forEach(function(h){if(MATRIX[h.n][level-1]==="E")o[h.n]=true});return o}
+
+/* ---------- HELPERS ---------- */
+function $(id){return document.getElementById(id)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function hname(n){return HABITS[n-1].name}
+function sdeMonth(s){if(s.vm)return s.vm[S.level];return s.m}
+function sdeMonths(s){var m=sdeMonth(s);return m==null?[]:[m]}
+function sdeVisible(s){return !s.lv||s.lv===S.level}
+function lvChips(id){
+  return '<div class="chips" role="radiogroup" aria-label="Level">'+[1,2,3,4].map(function(l){
+    return '<button class="chip" role="radio" aria-checked="'+(S.level===l)+'" data-level="'+l+'">Sec '+l+'</button>'}).join("")+'</div>';
+}
+
+/* ---------- EVENTS TAB ---------- */
+function renderHome(){
+  var el=$("p-home");
+  el.innerHTML=(S.view==="form")?formHTML():cardHTML();
+}
+function sdeCardHTML(s,i){
+  var m=sdeMonth(s);
+  var meta=s.all?"Throughout the year":(m==null?"Date to be confirmed":sdeMonths(s).map(function(x){return MONTHS[x]}).join(", "));
+  var hb=s.unassigned?'<span class="tag ph">Habit not assigned</span>':(s.h.length?s.h.map(function(n){return '<span class="tag habit">#'+n+' '+esc(hname(n))+'</span>'}).join(""):'<span class="tag ph">Habit to be mapped</span>');
+  var dis=s.unassigned?' disabled aria-disabled="true"':'';
+  return '<button class="sde" data-sde="'+i+'"'+dis+'><div><div class="t">'+esc(s.t)+'</div><div class="m">'+meta+(s.own?' · '+esc(s.own):'')+(s.note?' · '+esc(s.note):'')+''+'</div><div class="tags">'+hb+'</div></div></button>';
+}
+function formHTML(){
+  var h='';
+  h+='<div class="step"><h2>1. Which students?</h2>'+lvChips()+'<div class="ldo"><b>Level outcome:</b> '+esc(LDO[S.level])+'</div></div>';
+  h+='<div class="step"><h2>2. One student or the class?</h2><div class="chips" role="radiogroup" aria-label="Scope">'+
+     SCOPES.map(function(x){return '<button class="chip" role="radio" aria-checked="'+(S.scope===x)+'" data-scope="'+x+'">'+x+'</button>'}).join("")+'</div></div>';
+  h+='<div class="step"><h2>3. Which event?</h2><p class="hint">Pick a month, then tap the event.</p>';
+  h+='<div class="months">'+MONTHS.map(function(mn,i){
+    return '<button aria-pressed="'+(S.month===i)+'" class="'+(i===(new Date()).getMonth()?'cur':'')+'" data-month="'+i+'">'+mn+'</button>'}).join("")+'</div>';
+  var list=SDES.map(function(x,i){return {s:x,i:i}}).filter(function(o){return sdeVisible(o.s)});
+  var inM=list.filter(function(o){return !o.s.all&&sdeMonths(o.s).indexOf(S.month)>=0});
+  h+='<div class="sec-h">'+MONTHS[S.month]+'</div>';
+  h+=inM.length?inM.map(function(o){return sdeCardHTML(o.s,o.i)}).join(""):'<p class="empty">No events listed for this month.</p>';
+  var all=list.filter(function(o){return o.s.all});
+  h+='<div class="sec-h">Throughout the year</div>'+all.map(function(o){return sdeCardHTML(o.s,o.i)}).join("");
+  h+='</div>';
+  h+='<details class="more"><summary>More options</summary><div class="chips" role="radiogroup" aria-label="Domain">'+
+     DOMAINS.map(function(d){return '<button class="chip" role="radio" aria-checked="'+(S.domain===d.k)+'" data-domain="'+d.k+'">'+d.n+'</button>'}).join("")+'</div></details>';
+  return h;
+}
+var PROMPTS={
+ what:{def:"The EXPERIENCE of the situation.",subs:[
+  ["Sensory",["What did I (and my peers) hear / see / smell / touch?"]],
+  ["Cognitive",["What did I think?","What was I surprised by?","What assumptions did I have?","What problem did I identify?","What was my plan?","What were the consequences?","Who else was affected by this?"]],
+  ["Affective",["What did I feel at that point?"]]]},
+ so:{def:"The SIGNIFICANCE of the experience.",qs:["Why does this matter to me?","Which habit did I practice in this situation?","Which habit would have been helpful in this situation?"]},
+ now:{def:"The call to ACTION.",qs:["Am I one step closer to, or further from, my LDO?","If I experience this situation again, what will I do differently?","What is one specific action I can take to grow from this experience? When will I do so?","How will I know I have succeeded?","Who can I ask for help?"]}
+};
+function ul(a){return '<ul class="q">'+a.map(function(q){return '<li>'+esc(q)+'</li>'}).join("")+'</ul>'}
+var CYCLE='<svg viewBox="0 0 300 300" role="img" aria-label="Reflection cycle: 1 What, 2 So What, 3 Now What" class="cyc"><defs><marker id="m1" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="44" markerHeight="44" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#0b5d3b"/></marker><marker id="m2" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="44" markerHeight="44" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#1f9d5b"/></marker><marker id="m3" viewBox="0 0 10 10" refX="0" refY="5" markerWidth="44" markerHeight="44" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4fc98a"/></marker></defs><circle cx="150" cy="150" r="86" fill="#e6e9ed"/><path d="M175.9 53.4 A100 100 0 0 1 246.6 175.9" fill="none" stroke="#0b5d3b" stroke-width="28" marker-end="url(#m1)"/><path d="M220.7 220.7 A100 100 0 0 1 79.3 220.7" fill="none" stroke="#1f9d5b" stroke-width="28" marker-end="url(#m2)"/><path d="M53.4 175.9 A100 100 0 0 1 124.1 53.4" fill="none" stroke="#4fc98a" stroke-width="28" marker-end="url(#m3)"/><text x="236.6" y="100.0" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="18" font-weight="700">1</text><text x="150.0" y="250.0" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="18" font-weight="700">2</text><text x="63.4" y="100.0" text-anchor="middle" dominant-baseline="central" fill="#fff" font-size="18" font-weight="700">3</text><g text-anchor="middle" font-weight="700" fill="#16243a" font-size="10"><text x="150" y="112">Adaptive</text><text x="150" y="124">Learners</text><text x="150" y="146">Brave</text><text x="150" y="158">Leaders</text><text x="150" y="180">Reflective</text><text x="150" y="192">Contributors</text></g></svg>';
+function fullReflection(){
+  return '<div class="cycle">'+CYCLE+'<div class="cyc-list">'+
+   '<div class="cs" style="border-color:#0b5d3b"><h3>1. What?</h3><p>The <b>EXPERIENCE</b> of the situation.</p><p class="sub">Sensory, cognitive, affective.</p></div>'+
+   '<div class="cs" style="border-color:#1f9d5b"><h3>2. So What?</h3><p>The <b>SIGNIFICANCE</b> of the experience.</p></div>'+
+   '<div class="cs" style="border-color:#4fc98a"><h3>3. Now What?</h3><p>The call to <b>ACTION</b>.</p></div>'+
+   '</div></div><p class="sub">Level outcome (LDO): '+esc(LDO[S.level])+'</p>';
+}
+function qList(q){
+  var cls={"What?":"w1","So What?":"w2","Now What?":"w3"};
+  return '<ol class="eq">'+q.map(function(x){return '<li><span class="st '+cls[x[0]]+'">'+x[0]+'</span> '+esc(voice(x[1]))+'</li>'}).join("")+'</ol>';
+}
+function cardBody(s){
+  var h=fullReflection();
+  var q=EVQ[s.id]&&EVQ[s.id][S.level];
+  if(!q)return h+'<div class="stage"><h3>Questions for this event</h3><p>[To be developed] Questions chosen from the framework for '+esc(s.t)+', written for Sec '+S.level+' ('+S.scope.toLowerCase()+').</p></div>';
+  var r=RUN[S.scope];
+  return h+'<div class="note"><b>'+r[0]+'.</b> '+esc(r[1])+'</div><div class="stage"><h3>Questions for '+esc(s.t)+' (Sec '+S.level+', '+S.scope.toLowerCase()+')</h3>'+qList(q)+'</div>';
+}
+function cardHTML(){
+  var s=SDES[S.card];
+  var habs=s.h.length?s.h:Object.keys(emphasisFor(S.level)).map(Number);
+  var t=habs.map(function(n){return '<span class="tag habit">#'+n+' '+esc(hname(n))+'</span>'}).join("")+
+    '<span class="tag">Sec '+S.level+'</span><span class="tag">'+esc(S.scope)+'</span>'+
+    '<span class="tag">'+esc(DOMAINS.filter(function(d){return d.k===S.domain})[0].n)+'</span><span class="tag ph">21CC tags to come</span>';
+  if(!s.h.length)t+='<span class="tag ph">Habit to be mapped. Level defaults shown.</span>';
+  var m=sdeMonth(s);
+  return '<button class="link" id="back2">&larr; Back to events</button><article class="cardpage"><p class="sub">'+(s.all?"Throughout the year":(m==null?"Date to be confirmed":MONTHS[m]))+(s.own?' · '+esc(s.own):'')+'</p><h2>'+esc(s.t)+'</h2><div class="tags">'+t+'</div>'+cardBody(s)+
+   '<div class="row"><button class="btn2" id="copy">Copy text</button><span class="sub" id="copied" role="status"></span></div></article>';
+}
+function cardText(){var t=document.querySelector(".cardpage");return t?t.innerText:""}
+
+/* ---------- GLOSSARY ---------- */
+function renderGlossary(){
+  var h='<h2>Glossary</h2><p class="sub" style="margin-bottom:12px">The common language we use across the school.</p>';
+  h+='<div class="gl"><h3>Terms</h3><dl class="terms">'+
+   '<dt>SDE</dt><dd>Student Development Experience.</dd>'+
+   '<dt>TSI</dt><dd>Teacher Student Interaction.</dd>'+
+   '<dt>LDO</dt><dd>Level Development Outcome. One for each level (see the Events tab).</dd>'+
+   '<dt>FUBU</dt><dd>First Understand, Be Understood.</dd>'+
+   '<dt>What?</dt><dd>The EXPERIENCE of the situation.</dd>'+
+   '<dt>So What?</dt><dd>The SIGNIFICANCE of the experience.</dd>'+
+   '<dt>Now What?</dt><dd>The call to ACTION.</dd></dl></div>';
+  h+='<div class="gl"><h3>The seven habits</h3><dl class="terms">'+HABITS.map(function(x){return '<dt>#'+x.n+'</dt><dd>'+esc(x.name)+' <span class="sub">('+x.bank+')</span></dd>'}).join("")+'</dl><p class="note">Habit definitions to be added after approval.</p></div>';
+  h+='<div class="gl"><h3>Adaptive Learners</h3><p>Adaptive learners draw on diverse perspectives to apply their learning flexibly across changing contexts. By engaging in productive struggle, they leverage critical thinking and sound judgment to approach complex challenges. These dispositions equip them to make informed decisions and respond confidently to uncertainty in an evolving world.</p><p>As self-directed learners, they take ownership of their growth through meaningful goal-setting, self-discipline and effective self-management. They exercise metacognition by evaluating their strengths and limitations, seeking constructive feedback and adapting their learning strategies to improve.</p></div>';
+  h+='<div class="gl"><h3>Brave Leaders</h3><p>Brave leaders have a strong sense of self-awareness and actively explore their passions and strengths. They develop the confidence and poise to express themselves, take initiative and step beyond their comfort zones. They embrace challenges, respond constructively to setbacks and demonstrate resilience and a growth mindset.</p><p>Empowered to take ownership of their choices and aspirations, they seize opportunities with courage and conviction. Ultimately, they lead both themselves and others with integrity – making principled decisions, taking responsibility for their actions and positively influencing those around them. [不负韶华]</p></div>';
+  h+='<div class="gl"><h3>Reflective Contributors</h3><p>Reflective contributors are grounded in gratitude and a strong sense of belonging, appreciating the people, communities and institutions that have shaped them. With a genuine concern for others, they seek to understand diverse perspectives and needs, and recognise their responsibilities as global citizens.</p><p>They take initiative to translate empathy into purposeful action, demonstrating stewardship of their school community and wider society. Through reflecting on their experiences and the impact of their contributions, they deepen their understanding of themselves and others, and continue to grow in their capacity to make a meaningful difference.</p></div>';
+  $("p-glossary").innerHTML=h;
+}
+
+/* ---------- EVENTS ---------- */
+document.addEventListener("click",function(e){
+  var b=e.target.closest("button");if(!b)return;
+  if(b.dataset.level){S.level=+b.dataset.level;renderHome();return}
+  if(b.dataset.scope){S.scope=b.dataset.scope;renderHome();return}
+  if(b.dataset.domain){S.domain=b.dataset.domain;renderHome();return}
+  if(b.dataset.month){S.month=+b.dataset.month;renderHome();return}
+  if(b.dataset.sde){var i=+b.dataset.sde;if(SDES[i].unassigned)return;S.card=i;S.view="card";renderHome();window.scrollTo(0,0);return}
+  if(b.id==="back2"){S.view="form";renderHome();return}
+  if(b.id==="copy"){
+    var txt=cardText();
+    try{navigator.clipboard.writeText(txt).then(function(){$("copied").textContent="Copied."},function(){$("copied").textContent="Copy was blocked. Select the text and copy it."})}
+    catch(err){$("copied").textContent="Copy was blocked. Select the text and copy it."}
+  }
+});
+function go(tab){
+  ["home","glossary"].forEach(function(t){
+    $("p-"+t).classList.toggle("on",t===tab);
+  });
+  document.querySelectorAll("nav.tabs a").forEach(function(a){
+    if(a.dataset.tab===tab)a.setAttribute("aria-current","page");else a.removeAttribute("aria-current");
+  });
+}
+function route(){
+  var h=(location.hash||"#home").slice(1);
+  if(["home","glossary"].indexOf(h)<0)h="home";
+  go(h);
+}
+window.addEventListener("hashchange",route);
+renderHome();renderGlossary();route();
+</script>
+</body>
+</html>
